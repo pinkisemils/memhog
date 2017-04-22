@@ -35,7 +35,8 @@ loop(size_t limit, size_t increment, bool should_stop)
     char* data;
     while(limit > current_usage)
     {
-        if ((data = malloc(1024 * 1024 * increment)) == NULL) {
+        if ((data = malloc(1024 * 1024 * increment)) == NULL)
+        {
             fprintf(stderr, "failed to malloc %ldMB more at %ld\n", increment, current_usage);
             return -1;
         }
@@ -47,6 +48,7 @@ loop(size_t limit, size_t increment, bool should_stop)
         current_usage += increment;
         sleep(1);
     }
+    fprintf(stdout, "Will stop hogging memory now, currently hogged %ld\n", current_usage);
     while (!should_stop)
     {
         sleep(1);
