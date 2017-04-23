@@ -7,7 +7,7 @@ at any point in time, it will return with a non-zero return code.
 # What's this mangle.py?
 If one changes the C code, in order to make this Dockerfile distributable
 easily, `mangle.py` will generate a new Dockerfile with the C code already
-_embedded_.
+_embedded_. So, to generate the Dockerfile, just run `python mangle.py`.
 
 # How to make it do more or less?
 Here's a list of environment variables that will change it's behaviour:

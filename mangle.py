@@ -8,17 +8,17 @@ end = [
     ]
 def into_docker_line(l):
     l = l.replace('\n', '')
-    return "RUN echo '{}' >> /opt/memoryhog/main.c\n".format(l)
+    return "echo \"{}\" >> /opt/memoryhog/main.c && \\\n".format(l)
 
 with open('Dockerfile', 'w') as df:
     df.writelines(start)
     with open('main.c') as inf:
-        buf = '/*w*/'
+        buf = 'RUN '
         for line in inf.readlines():
-            if line[0] == '#':
-                df.write(into_docker_line(line))
-            else:
-                l = line.replace('\n', ' ')
-                buf = buf + l
-        df.write(into_docker_line(buf))
+            l = line.replace('\n', ' ')
+            l = line.replace("'", "\\'")
+            l = line.replace('"', '\\"')
+            buf = buf + into_docker_line(l)
+        df.write(buf + '\n')
+        df.write("echo lol\n")
     df.writelines(end)
