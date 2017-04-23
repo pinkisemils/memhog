@@ -7,8 +7,8 @@
 #include <sys/resource.h>
 
 
-long DEFAULT_LIMIT = 1024;
-long DEFAULT_INCREMENT = 1;
+long DEFAULT_LIMIT = 128;
+long DEFAULT_INCREMENT = 8;
 bool DEFAULT_SHOULD_STOP = false;
 
 size_t
@@ -41,11 +41,8 @@ print_curr_mem_usage()
         fprintf(stderr, "getrusage failed with %d\n", err_code);
         return;
     }
-    fprintf(stdout, "ru_maxrss: %ldmb\tru_ixrss: %ldmb\tru_idrss: %ldmb\tru_isrss: %ldmb\n",
-            usg.ru_maxrss / 1024,
-            usg.ru_ixrss / 1024,
-            usg.ru_idrss / 1024,
-            usg.ru_isrss / 1024);
+    fprintf(stdout, "ru_maxrss: %ldmb\n",
+            usg.ru_maxrss / 1024);
 }
 
 int
