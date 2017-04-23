@@ -3,6 +3,9 @@
 #include <stdio.h>
 #include <stdbool.h>
 #include <errno.h>
+#include <sys/time.h>
+#include <sys/resource.h>
+
 
 long DEFAULT_LIMIT = 1024;
 long DEFAULT_INCREMENT = 1;
@@ -28,6 +31,23 @@ env_to_sizet(char* env_var, long def)
     return (size_t)retval;
 }
 
+void
+print_curr_mem_usage()
+{
+    struct rusage usg;
+    int err_code;
+    if ((err_code = getrusage(RUSAGE_SELF, &usg)) != 0)
+    {
+        fprintf(stderr, "getrusage failed with %d\n", err_code);
+        return;
+    }
+    fprintf(stdout, "ru_maxrss: %ldmb\tru_ixrss: %ldmb\tru_idrss: %ldmb\tru_isrss: %ldmb\n",
+            usg.ru_maxrss / 1024,
+            usg.ru_ixrss / 1024,
+            usg.ru_idrss / 1024,
+            usg.ru_isrss / 1024);
+}
+
 int
 loop(size_t limit, size_t increment, bool should_stop)
 {
@@ -44,6 +64,7 @@ loop(size_t limit, size_t increment, bool should_stop)
         {
             data[i] = 1;
         }
+        print_curr_mem_usage();
 
         current_usage += increment;
         sleep(1);
