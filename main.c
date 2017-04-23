@@ -49,7 +49,7 @@ int
 loop(size_t limit, size_t increment, bool should_stop)
 {
     size_t current_usage = 0;
-    char* data;
+    int* data;
     while(limit > current_usage)
     {
         if ((data = malloc(1024 * 1024 * increment)) == NULL)
@@ -57,13 +57,14 @@ loop(size_t limit, size_t increment, bool should_stop)
             fprintf(stderr, "failed to malloc %ldMB more at %ld\n", increment, current_usage);
             return -1;
         }
-        for (int i=0; i<1024 * 1024 * increment; ++i)
+        for (int i=0; i<1024 * 1024 / 4 * increment; ++i)
         {
-            data[i] = 1;
+            data[i] = rand();
         }
-        print_curr_mem_usage();
-
         current_usage += increment;
+        print_curr_mem_usage();
+        printf("Currently written to %ldMB of memory\n", current_usage);
+
         sleep(1);
     }
     fprintf(stdout, "Will stop hogging memory now, currently hogged %ld\n", current_usage);
